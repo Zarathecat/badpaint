@@ -137,8 +137,9 @@ while True == True:
                     splodges.remove(splodge)
                     break
 
-        if splodge["rect"].colliderect(fill_square["rect"]):
-            splodges.remove(splodge)
+        for splodge in splodges[:]:
+            if splodge["rect"].colliderect(fill_square["rect"]):
+                splodges.remove(splodge)
 
         for splodge in splodges:
             pygame.draw.ellipse(window_surface, splodge["colour"], splodge["rect"])

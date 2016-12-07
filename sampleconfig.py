@@ -22,4 +22,4 @@ WIDTH = 500
 HEIGHT = 500
 
 # Change this to your preferred savefile. You may have only one.
-SAVEFILE = 'why.jpeg'
+SAVEFILE = 'whyyy.jpeg'

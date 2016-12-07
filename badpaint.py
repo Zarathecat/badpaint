@@ -33,7 +33,7 @@ BLUE = Color('blue')
 BLACK = Color('black')
 WHITE = Color('white')
 
-fillcolour = WHITE
+fill_colour = WHITE
 stop_painting = True
 palette_x = 0
 
@@ -63,7 +63,7 @@ brushes = [big_brush_rect, med_brush_rect, small_brush_rect]
 
 squares = [red_square, yellow_square, green_square, blue_square, black_square, white_square]
 
-window_surface.fill(fillcolour)
+window_surface.fill(fill_colour)
 
 splodge_colour = BLACK
 splodges = []
@@ -73,16 +73,20 @@ brush_size = 50 #default
 while True == True:
     pygame.display.update()
 
+    fill_square = {"rect":pygame.Rect(palette_x, 500, PAINTSIZE, PAINTSIZE), "colour":splodge_colour}
+
+
     for square in squares:
         pygame.draw.rect(window_surface, BLACK, (square["rect"][0], square["rect"][1], PAINTSIZE+5, PAINTSIZE+5))
         pygame.draw.rect(window_surface, square["colour"], square["rect"])
     for brush in brushes:
         pygame.draw.ellipse(window_surface, BLACK, brush["rect"], 5)
+    pygame.draw.rect(window_surface, fill_square["colour"], fill_square["rect"])
 
     for event in pygame.event.get():
         if event.type == QUIT:
             print 'Saving your masterpiece to %s!' % SAVEFILE
-            window_surface.fill(fillcolour)
+            window_surface.fill(fill_colour)
             for splodge in splodges:
                 pygame.draw.ellipse(window_surface, splodge["colour"], splodge["rect"])
             pygame.image.save(window_surface, SAVEFILE)
@@ -102,9 +106,14 @@ while True == True:
                 if brush["rect"].collidepoint((mousex, mousey)):
                     brush_size = brush["size"]
                     no_paint = True
+
+            if fill_square["rect"].collidepoint((mousex, mousey)):
+                fill_colour = splodge_colour
+                no_paint = True
+                window_surface.fill(fill_colour)
               
             if no_paint == False:
-                splodge = {"rect":pygame.Rect(mousex, mousey, brush_size, brush_size), "colour": splodge_colour}
+                splodge = {"rect":pygame.Rect(mousex-brush_size/2, mousey-brush_size/2, brush_size, brush_size), "colour": splodge_colour}
                 splodges.append(splodge)
 
             for splodge in splodges:
@@ -113,7 +122,7 @@ while True == True:
             stop_painting = True
     if stop_painting == False:
         mousex, mousey = pygame.mouse.get_pos()
-        splodge = {"rect":pygame.Rect(mousex, mousey, brush_size, brush_size), "colour": splodge_colour}
+        splodge = {"rect":pygame.Rect(mousex-brush_size/2, mousey-brush_size/2, brush_size, brush_size), "colour": splodge_colour}
         splodges.append(splodge)
 
         for splodge in splodges[:]:
@@ -127,6 +136,9 @@ while True == True:
                 if splodge["rect"].colliderect(brush["rect"]):
                     splodges.remove(splodge)
                     break
+
+        if splodge["rect"].colliderect(fill_square["rect"]):
+            splodges.remove(splodge)
 
         for splodge in splodges:
             pygame.draw.ellipse(window_surface, splodge["colour"], splodge["rect"])

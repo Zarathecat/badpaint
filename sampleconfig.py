@@ -16,10 +16,10 @@
 # called 'config.py', and change that.
 
 # Window width in pixels
-WIDTH = 500
+WIDTH = 1000
 
 # Window height in pixels
-HEIGHT = 500
+HEIGHT = 700
 
 # Change this to your preferred savefile. You may have only one.
 SAVEFILE = 'whyyy.jpeg'

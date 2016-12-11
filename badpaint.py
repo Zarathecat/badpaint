@@ -172,16 +172,13 @@ while True == True:
         for square in squares[:]:
             if splodge["rect"].colliderect(square["rect"]):
                 splodges.remove(splodge)
-                print "removing..."
                 break
 
     # remove paint overlapping brushes
     for splodge in splodges[:]:
         for brush in brushes[:]:
             if splodge["rect"].colliderect(brush["rect"]):
-                print splodge["rect"], brush["rect"]
                 splodges.remove(splodge)
-                print splodges
                 break
 
     # remove paint overlapping fill square

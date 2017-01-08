@@ -83,6 +83,14 @@ brush_size = med_brush #default
 
 stop_painting = True #don't paint until asked to paint
 
+def remove_overlaps(paint, ui_elements):
+    for splodge in paint[:]:
+        for element in ui_elements[:]:
+            if splodge["rect"].colliderect(element["rect"]):
+                paint.remove(splodge)
+                break
+
+
 while True == True:
     pygame.display.update()
 
@@ -168,18 +176,11 @@ while True == True:
     # splodges before drawing the picture to the screen
 
     # remove paint overlapping palette
-    for splodge in splodges[:]:
-        for square in squares[:]:
-            if splodge["rect"].colliderect(square["rect"]):
-                splodges.remove(splodge)
-                break
+    remove_overlaps(splodges, squares)
 
     # remove paint overlapping brushes
-    for splodge in splodges[:]:
-        for brush in brushes[:]:
-            if splodge["rect"].colliderect(brush["rect"]):
-                splodges.remove(splodge)
-                break
+    remove_overlaps(splodges, brushes)
+
 
     # remove paint overlapping fill square
     for splodge in splodges[:]:

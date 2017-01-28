@@ -36,19 +36,28 @@ WHITE = Color('white')
 
 # The square paint buttons that a user can select to change brush colour
 
-red_square = {"rect":pygame.Rect(0, 0, PAINTSIZE, PAINTSIZE), "colour":RED}
+height = 50
+vertical_gap = 1
 
-yellow_square = {"rect":pygame.Rect(0, 51, PAINTSIZE, PAINTSIZE), "colour":YELLOW}
+PAINTSIZE, PAINTSIZE = PAINTSIZE, PAINTSIZE
 
-green_square = {"rect":pygame.Rect(0, 102, PAINTSIZE, PAINTSIZE), "colour":GREEN}
+# since rects take so many parameters, these are split out for aesthetics
+square_1_dimensions = 0, 0, PAINTSIZE, PAINTSIZE
+square_2_dimensions = 0, height + vertical_gap, PAINTSIZE, PAINTSIZE
+square_3_dimensions = 0, 2*height + 2* vertical_gap, PAINTSIZE, PAINTSIZE
+square_4_dimensions = 0, 3*height + 3* vertical_gap, PAINTSIZE, PAINTSIZE
+square_5_dimensions = 0, 4*height + 4* vertical_gap, PAINTSIZE, PAINTSIZE
+square_6_dimensions = 0, 5* height + 5* vertical_gap, PAINTSIZE, PAINTSIZE
 
-blue_square = {"rect":pygame.Rect(0, 153, PAINTSIZE, PAINTSIZE), "colour":BLUE}
+red_square = {"rect":pygame.Rect(square_1_dimensions), "colour":RED}
+yellow_square = {"rect":pygame.Rect(square_2_dimensions), "colour":YELLOW}
+green_square = {"rect":pygame.Rect(square_3_dimensions), "colour":GREEN}
+blue_square = {"rect":pygame.Rect(square_4_dimensions), "colour":BLUE}
+black_square = {"rect":pygame.Rect(square_5_dimensions), "colour":BLACK}
+white_square = {"rect":pygame.Rect(square_6_dimensions), "colour": WHITE}
 
-black_square = {"rect":pygame.Rect(0, 204, PAINTSIZE, PAINTSIZE), "colour":BLACK}
-
-white_square = {"rect":pygame.Rect(0, 255, PAINTSIZE, PAINTSIZE), "colour": WHITE}
-
-squares = [red_square, yellow_square, green_square, blue_square, black_square, white_square]
+squares = [red_square, yellow_square, green_square, blue_square,
+           black_square, white_square]
 
 
 big_brush = 80
@@ -58,11 +67,13 @@ small_brush = 20
 # The circles that the user can click to select brush size. These are below
 # the paint-colour-select squares.
 
-big_brush_rect = {"rect":pygame.Rect(1, 260 + big_brush, big_brush, big_brush), "size":big_brush}
+big_brush_dimensions = 1, 260 + big_brush, big_brush, big_brush
+med_brush_dimensions = 10, 260 + big_brush + big_brush, med_brush, med_brush
+small_brush_dimensions = 20, 260+big_brush+big_brush+med_brush, small_brush, small_brush
 
-med_brush_rect = {"rect":pygame.Rect(10, 260 + big_brush + big_brush, med_brush, med_brush), "size":med_brush}
-
-small_brush_rect = {"rect":pygame.Rect(20, 260+big_brush+big_brush+med_brush, small_brush, small_brush), "size":small_brush}
+big_brush_rect = {"rect":pygame.Rect(big_brush_dimensions), "size":big_brush}
+med_brush_rect = {"rect":pygame.Rect(med_brush_dimensions), "size":med_brush}
+small_brush_rect = {"rect":pygame.Rect(small_brush_dimensions), "size":small_brush}
 
 brushes = [big_brush_rect, med_brush_rect, small_brush_rect]
 
@@ -98,24 +109,34 @@ while True == True:
     # We put it here so its colour will change dynamically to match the
     # selected paint colour, so the user can see what colour they will fill
     # the background.
-    fill_square = {"rect":pygame.Rect(0, 500, PAINTSIZE, PAINTSIZE), "colour":splodge_colour}
+    fill_square_rect = pygame.Rect(0, 500, PAINTSIZE, PAINTSIZE)
+    fill_square = {"rect":fill_square_rect, "colour":splodge_colour}
 
+    outline = 5
     # draw paint palette to screen
     for square in squares:
 
         # give squares an outline so that the one matching the background colour
         # doesn't 'disappear'
-        pygame.draw.rect(window_surface, BLACK, (square["rect"][0], square["rect"][1], PAINTSIZE+5, PAINTSIZE+5))
+        square_left = square["rect"][0]
+        square_top = square["rect"][1]
+        square_size = PAINTSIZE+outline
+        square_dimensions = square_left, square_top, square_size, square_size
+        pygame.draw.rect(window_surface, BLACK, (square_dimensions))
 
         #draw paint palette squares
         pygame.draw.rect(window_surface, square["colour"], square["rect"])
 
     # draw paint brushes to screen
     for brush in brushes:
-        pygame.draw.ellipse(window_surface, BLACK, brush["rect"], 5)
+        pygame.draw.ellipse(window_surface, BLACK, brush["rect"], outline)
 
     # draw outline for square that fills the background to screen
-    pygame.draw.rect(window_surface, WHITE, (fill_square["rect"][0]-2, fill_square["rect"][1]-2, PAINTSIZE+5, PAINTSIZE+5))
+    fill_left = fill_square["rect"][0] - 2 # -2 so it gets more of a border
+    fill_top = fill_square["rect"][1] - 2 # same again
+    fill_size = PAINTSIZE+outline
+    fill_square_dimensions = fill_left, fill_top, fill_size, fill_size
+    pygame.draw.rect(window_surface, WHITE, (fill_square_dimensions))
 
     # draw fill square itself
     pygame.draw.rect(window_surface, fill_square["colour"], fill_square["rect"])
@@ -139,7 +160,7 @@ while True == True:
             sys.exit()
 
         if event.type == MOUSEBUTTONDOWN:
-            stop_painting = False #toggling lets the user drag to paint
+            stop_painting = False  # toggling lets the user drag to paint
 
             # get mouse position
             mousex, mousey = pygame.mouse.get_pos()
@@ -167,7 +188,15 @@ while True == True:
     # add to list of paint to be drawn to screen while user drags mouse
     if stop_painting == False:
         mousex, mousey = pygame.mouse.get_pos()
-        splodge = {"rect":pygame.Rect(mousex-brush_size/2, mousey-brush_size/2, brush_size, brush_size), "colour": splodge_colour}
+
+        # this makes the splodge top-left appear above and to the left of the
+        # click, so the point is in the center of the splodge
+        mouse_up = mousex-brush_size/2
+        mouse_left = mousey-brush_size/2
+
+        splodge_dimensions = (mouse_up, mouse_left, brush_size, brush_size)
+        splodge_rect = pygame.Rect(splodge_dimensions)
+        splodge = {"rect":splodge_rect, "colour": splodge_colour}
         splodges.append(splodge)
 
     

@@ -39,27 +39,15 @@ WHITE = Color('white')
 height = 50
 vertical_gap = 1
 
-PAINTSIZE, PAINTSIZE = PAINTSIZE, PAINTSIZE
+squares = []
+colour_list = [RED, YELLOW, GREEN, BLUE, BLACK, WHITE]
 
-# since rects take so many parameters, these are split out for aesthetics
-square_1_dimensions = 0, 0, PAINTSIZE, PAINTSIZE
-square_2_dimensions = 0, height + vertical_gap, PAINTSIZE, PAINTSIZE
-square_3_dimensions = 0, 2*height + 2* vertical_gap, PAINTSIZE, PAINTSIZE
-square_4_dimensions = 0, 3*height + 3* vertical_gap, PAINTSIZE, PAINTSIZE
-square_5_dimensions = 0, 4*height + 4* vertical_gap, PAINTSIZE, PAINTSIZE
-square_6_dimensions = 0, 5* height + 5* vertical_gap, PAINTSIZE, PAINTSIZE
-
-red_square = {"rect":pygame.Rect(square_1_dimensions), "colour":RED}
-yellow_square = {"rect":pygame.Rect(square_2_dimensions), "colour":YELLOW}
-green_square = {"rect":pygame.Rect(square_3_dimensions), "colour":GREEN}
-blue_square = {"rect":pygame.Rect(square_4_dimensions), "colour":BLUE}
-black_square = {"rect":pygame.Rect(square_5_dimensions), "colour":BLACK}
-white_square = {"rect":pygame.Rect(square_6_dimensions), "colour": WHITE}
-
-squares = [red_square, yellow_square, green_square, blue_square,
-           black_square, white_square]
-
-
+for i in range(len(colour_list)):
+    colour = colour_list[i]  # the RGB value
+    dimensions = 0, i*height + i* vertical_gap, PAINTSIZE, PAINTSIZE
+    new_square = {"rect":pygame.Rect(dimensions), 'colour': colour}
+    squares.append(new_square)
+ 
 big_brush = 80
 med_brush = 40
 small_brush = 20

@@ -23,3 +23,23 @@ HEIGHT = 760
 
 # Change this to your preferred savefile. You may have only one.
 SAVEFILE = 'whyyy.jpeg'
+
+# Array of colours to use
+colour_names = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'BLACK', 'WHITE']
+
+# Size of paint buttons, not brush
+PAINTSIZE = 50
+
+# Gap between buttons in UI
+GAPSIZE = 1
+
+# The buttons that the user can click to select brush size.
+big_brush = 80
+med_brush = 40
+small_brush = 20
+
+# Brush is medium by default
+brush_size = med_brush
+
+# Width of button outlines
+outline = 5

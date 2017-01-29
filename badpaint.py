@@ -23,15 +23,23 @@ WINDOWHEIGHT = HEIGHT
 
 window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
-# The square paint buttons that a user can select to change brush colour
-
-PAINTSIZE = 50 #size of paint buttons, not brush
-GAPSIZE = 1  # Gap between buttons in UI.
-colour_names = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'BLACK', 'WHITE']
-
 # We use black and white alone a lot for outlines
 WHITE = Color('white')
 BLACK = Color('black')
+
+# Background is white by default
+fill_colour = WHITE
+
+# Fill square outline
+fill_outline = WHITE
+
+# Paint is black by default
+splodge_colour = BLACK
+
+# Colour of button outlines
+outline_colour = BLACK
+
+# The square paint buttons that a user can select to change brush colour
 
 def make_colours(colours_list):
     colours = []
@@ -57,10 +65,6 @@ squares = make_paint_squares(colours)
 # The circles that the user can click to select brush size. These are below
 # the paint-colour-select squares.
  
-big_brush = 80
-med_brush = 40
-small_brush = 20
-
 # Get last square's y coordinate, so we can put brushes relative to it.
 last_square_y = squares[-1]['rect'][1]
 brush_y = last_square_y + PAINTSIZE + GAPSIZE
@@ -84,22 +88,10 @@ small_brush_rect = {"rect":pygame.Rect(small_brush_dimensions), "size":small_bru
 brushes = [big_brush_rect, med_brush_rect, small_brush_rect]
 
 
-# Background is white by default
-
-fill_colour = WHITE
-
-# Fill square outline
-fill_outline = WHITE
-
 window_surface.fill(fill_colour)
-
-# Paint is black by default
-splodge_colour = BLACK
 
 # As the user paints, paint splodges will be added to this array
 splodges = []
-
-brush_size = med_brush #default
 
 stop_painting = True #don't paint until asked to paint
 
@@ -121,8 +113,6 @@ while True == True:
     fill_square_rect = pygame.Rect(0, fill_square_y, PAINTSIZE, PAINTSIZE)
     fill_square = {"rect":fill_square_rect, "colour":splodge_colour}
 
-    outline = 5
-    outline_colour = BLACK
     # draw paint palette to screen
     for square in squares:
 

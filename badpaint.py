@@ -23,11 +23,10 @@ WINDOWHEIGHT = HEIGHT
 
 window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
-
 # The square paint buttons that a user can select to change brush colour
 
 PAINTSIZE = 50 #size of paint buttons, not brush
-GAPSIZE = 1  # Gap between buttons in UI
+GAPSIZE = 1  # Gap between buttons in UI.
 colour_names = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'BLACK', 'WHITE']
 
 # We use black and white alone a lot for outlines
@@ -64,7 +63,7 @@ small_brush = 20
 
 # Get last square's y coordinate, so we can put brushes relative to it.
 last_square_y = squares[-1]['rect'][1]
-brush_y = last_square_y + big_brush + 10 # '10' is arbitrary; just looks best.
+brush_y = last_square_y + PAINTSIZE + GAPSIZE
 
 # The brushes are offset from left relative to their size so they're lazily
 # centered under each other. Their y coordinate is worked out relative
@@ -118,7 +117,8 @@ while True == True:
     # We put it here so its colour will change dynamically to match the
     # selected paint colour, so the user can see what colour they will fill
     # the background.
-    fill_square_rect = pygame.Rect(0, 500, PAINTSIZE, PAINTSIZE)
+    fill_square_y = small_brush_y + small_brush + GAPSIZE
+    fill_square_rect = pygame.Rect(0, fill_square_y, PAINTSIZE, PAINTSIZE)
     fill_square = {"rect":fill_square_rect, "colour":splodge_colour}
 
     outline = 5

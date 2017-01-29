@@ -24,26 +24,30 @@ WINDOWHEIGHT = HEIGHT
 window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
 
-PAINTSIZE = 50 #size of paint buttons, not brush
-
-RED = Color('red')
-YELLOW = Color('orange')
-GREEN = Color('green')
-BLUE = Color('blue')
-BLACK = Color('black')
-WHITE = Color('white')
-
-
 # The square paint buttons that a user can select to change brush colour
 
-vertical_gap = 1
-colours = [RED, YELLOW, GREEN, BLUE, BLACK, WHITE]
+PAINTSIZE = 50 #size of paint buttons, not brush
+GAPSIZE = 1  # Gap between buttons in UI
+colour_names = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'BLACK', 'WHITE']
+
+# We use black and white alone a lot for outlines
+WHITE = Color('white')
+BLACK = Color('black')
+
+def make_colours(colours_list):
+    colours = []
+    for i in colours_list:
+        colour = Color(i)
+        colours.append(colour)
+    return colours
+
+colours = make_colours(colour_names)
 
 def make_paint_squares(colour_list):
     squares = []
     for i in range(len(colour_list)):
         colour = colour_list[i]  # the RGB value
-        dimensions = 0, i*PAINTSIZE + i* vertical_gap, PAINTSIZE, PAINTSIZE
+        dimensions = 0, i * PAINTSIZE + i * GAPSIZE, PAINTSIZE, PAINTSIZE
         new_square = {"rect":pygame.Rect(dimensions), 'colour': colour}
         squares.append(new_square)
     return squares
@@ -60,7 +64,7 @@ small_brush = 20
 
 # Get last square's y coordinate, so we can put brushes relative to it.
 last_square_y = squares[-1]['rect'][1]
-brush_y = last_square_y + big_brush + 10 # '10' is fairly arbitrary, just looks best.
+brush_y = last_square_y + big_brush + 10 # '10' is arbitrary; just looks best.
 
 # The brushes are offset from left relative to their size so they're lazily
 # centered under each other. Their y coordinate is worked out relative
@@ -84,6 +88,9 @@ brushes = [big_brush_rect, med_brush_rect, small_brush_rect]
 # Background is white by default
 
 fill_colour = WHITE
+
+# Fill square outline
+fill_outline = WHITE
 
 window_surface.fill(fill_colour)
 
@@ -115,6 +122,7 @@ while True == True:
     fill_square = {"rect":fill_square_rect, "colour":splodge_colour}
 
     outline = 5
+    outline_colour = BLACK
     # draw paint palette to screen
     for square in squares:
 
@@ -124,21 +132,21 @@ while True == True:
         square_top = square["rect"][1]
         square_size = PAINTSIZE+outline
         square_dimensions = square_left, square_top, square_size, square_size
-        pygame.draw.rect(window_surface, BLACK, (square_dimensions))
+        pygame.draw.rect(window_surface, outline_colour, (square_dimensions))
 
         #draw paint palette squares
         pygame.draw.rect(window_surface, square["colour"], square["rect"])
 
     # draw paint brushes to screen
     for brush in brushes:
-        pygame.draw.ellipse(window_surface, BLACK, brush["rect"], outline)
+        pygame.draw.ellipse(window_surface, outline_colour, brush["rect"], outline)
 
     # draw outline for square that fills the background to screen
     fill_left = fill_square["rect"][0] - 2 # -2 so it gets more of a border
     fill_top = fill_square["rect"][1] - 2 # same again
     fill_size = PAINTSIZE+outline
     fill_square_dimensions = fill_left, fill_top, fill_size, fill_size
-    pygame.draw.rect(window_surface, WHITE, (fill_square_dimensions))
+    pygame.draw.rect(window_surface, fill_outline, (fill_square_dimensions))
 
     # draw fill square itself
     pygame.draw.rect(window_surface, fill_square["colour"], fill_square["rect"])

@@ -36,28 +36,43 @@ WHITE = Color('white')
 
 # The square paint buttons that a user can select to change brush colour
 
-height = 50
 vertical_gap = 1
+colours = [RED, YELLOW, GREEN, BLUE, BLACK, WHITE]
 
-squares = []
-colour_list = [RED, YELLOW, GREEN, BLUE, BLACK, WHITE]
+def make_paint_squares(colour_list):
+    squares = []
+    for i in range(len(colour_list)):
+        colour = colour_list[i]  # the RGB value
+        dimensions = 0, i*PAINTSIZE + i* vertical_gap, PAINTSIZE, PAINTSIZE
+        new_square = {"rect":pygame.Rect(dimensions), 'colour': colour}
+        squares.append(new_square)
+    return squares
 
-for i in range(len(colour_list)):
-    colour = colour_list[i]  # the RGB value
-    dimensions = 0, i*height + i* vertical_gap, PAINTSIZE, PAINTSIZE
-    new_square = {"rect":pygame.Rect(dimensions), 'colour': colour}
-    squares.append(new_square)
+squares = make_paint_squares(colours)
+
+
+# The circles that the user can click to select brush size. These are below
+# the paint-colour-select squares.
  
 big_brush = 80
 med_brush = 40
 small_brush = 20
 
-# The circles that the user can click to select brush size. These are below
-# the paint-colour-select squares.
+# Get last square's y coordinate, so we can put brushes relative to it.
+last_square_y = squares[-1]['rect'][1]
+brush_y = last_square_y + big_brush + 10 # '10' is fairly arbitrary, just looks best.
 
-big_brush_dimensions = 1, 260 + big_brush, big_brush, big_brush
-med_brush_dimensions = 10, 260 + big_brush + big_brush, med_brush, med_brush
-small_brush_dimensions = 20, 260+big_brush+big_brush+med_brush, small_brush, small_brush
+# The brushes are offset from left relative to their size so they're lazily
+# centered under each other. Their y coordinate is worked out relative
+# to the previous brushes (and paint squares)
+
+big_brush_y = brush_y
+med_brush_y = brush_y + big_brush
+small_brush_y = brush_y + big_brush + med_brush
+
+big_brush_dimensions = 1, big_brush_y, big_brush, big_brush
+med_brush_dimensions = 10, med_brush_y, med_brush, med_brush
+small_brush_dimensions = 20, small_brush_y, small_brush, small_brush
 
 big_brush_rect = {"rect":pygame.Rect(big_brush_dimensions), "size":big_brush}
 med_brush_rect = {"rect":pygame.Rect(med_brush_dimensions), "size":med_brush}
@@ -88,7 +103,6 @@ def remove_overlaps(paint, ui_elements):
             if splodge["rect"].colliderect(element["rect"]):
                 paint.remove(splodge)
                 break
-
 
 while True == True:
     pygame.display.update()
@@ -197,7 +211,6 @@ while True == True:
 
     # remove paint overlapping brushes
     remove_overlaps(splodges, brushes)
-
 
     # remove paint overlapping fill square
     for splodge in splodges[:]:
